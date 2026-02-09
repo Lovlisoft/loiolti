@@ -15,10 +15,10 @@ defineProps({
 </script>
 
 <template>
-  <AppLayout title="Dashboard">
+  <AppLayout title="Cotizador">
     <template #header>
       <h2 class="text-xl font-semibold leading-tight">
-        Dashboard
+        Cotizador
       </h2>
     </template>
 

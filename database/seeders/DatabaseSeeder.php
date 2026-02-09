@@ -21,5 +21,11 @@ final class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
         ]);
+
+        $this->call([
+            ImportLegacyItemsSeeder::class,
+            QuoteLegacySeeder::class,
+            LoadProductsFromLegacyDatabase::class,
+        ]);
     }
 }

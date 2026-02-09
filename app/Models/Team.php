@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\HasSettings;
 use Carbon\CarbonImmutable;
 use Database\Factories\TeamFactory;
 use Laravel\Jetstream\Events\TeamCreated;
@@ -44,7 +45,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 final class Team extends JetstreamTeam
 {
     /** @use HasFactory<TeamFactory> */
-    use HasFactory;
+    use HasFactory,
+        HasSettings;
 
     /**
      * The attributes that are mass assignable.

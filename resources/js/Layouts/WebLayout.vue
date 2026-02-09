@@ -2,7 +2,6 @@
 import Button from '@/Components/shadcn/ui/button/Button.vue'
 import { Icon } from '@iconify/vue'
 import { Link } from '@inertiajs/vue3'
-import { useColorMode } from '@vueuse/core'
 import { ref } from 'vue'
 
 defineProps({
@@ -11,14 +10,6 @@ defineProps({
   },
   canRegister: {
     type: Boolean,
-  },
-})
-
-const mode = useColorMode({
-  attribute: 'class',
-  modes: {
-    light: '',
-    dark: 'dark',
   },
 })
 
@@ -77,15 +68,6 @@ function toggleMenu() {
               Dashboard
             </Button>
           </div>
-          <Button
-            variant="ghost" size="icon" aria-label="Toggle Theme"
-            @click="mode = mode === 'dark' ? 'light' : 'dark'"
-          >
-            <Icon
-              class="text-muted-foreground h-6 w-6"
-              :icon="mode === 'dark' ? 'lucide:sun' : 'lucide:moon'"
-            />
-          </Button>
           <a
             :href="githubUrl" target="_blank" rel="noreferrer" class="hidden sm:inline-block"
             aria-label="GitHub"
@@ -122,15 +104,15 @@ function toggleMenu() {
               Register
             </Button>
           </template>
-          <Button
-            v-else variant="outline" :as="Link" href="/dashboard" class="w-full"
-            prefetch="mount" @click="toggleMobileMenu"
-          >
+            <Button
+              v-else variant="outline" :as="Link" href="/dashboard" class="w-full"
+              prefetch="mount" @click="toggleMenu"
+            >
             Dashboard
           </Button>
           <a
             :href="githubUrl" target="_blank" rel="noreferrer"
-            class="flex items-center space-x-2 text-sm font-medium" @click="toggleMobileMenu"
+            class="flex items-center space-x-2 text-sm font-medium" @click="toggleMenu"
           >
             <Icon icon="mdi:github" class="h-5 w-5" />
             <span>GitHub</span>
@@ -163,11 +145,6 @@ function toggleMenu() {
             </span>
           </p>
           <div class="flex gap-4">
-            <Icon
-              class="text-muted-foreground" :icon="mode === 'dark' ? 'lucide:sun' : 'lucide:moon'"
-              @click="mode = mode === 'dark' ? 'light' : 'dark'"
-            />
-
             <a
               :href="githubUrl" target="_blank" rel="noopener noreferrer"
               class="text-muted-foreground hover:text-foreground" aria-label="GitHub"

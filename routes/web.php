@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\User\OauthController;
@@ -29,10 +31,11 @@ Route::prefix('auth')->group(
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/quote', [QuoteController::class, 'index'])->name('quote.index');
+    Route::post('/quote/generate', [QuoteController::class, 'generate'])->name('quote.generate');
 
     Route::delete('/auth/destroy/{provider}', [OauthController::class, 'destroy'])->name('oauth.destroy');
-
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
 
     Route::resource('/subscriptions', SubscriptionController::class)
         ->names('subscriptions')
