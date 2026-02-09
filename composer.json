@@ -26,12 +26,12 @@
     "sentry/sentry-laravel": "^4.10",
     "spatie/laravel-sitemap": "^7.3",
     "symfony/mailer": "~7.1.0",
-    "tightenco/ziggy": "^2.0"
+    "tightenco/ziggy": "^2.0",
+    "fakerphp/faker": "^1.23"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^3.2",
     "driftingly/rector-laravel": "^2.0",
-    "fakerphp/faker": "^1.23",
     "knuckleswtf/scribe": "^4.38",
     "larastan/larastan": "^3.0",
     "laravel/pail": "^1.1",

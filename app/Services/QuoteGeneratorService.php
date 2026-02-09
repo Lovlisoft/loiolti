@@ -39,6 +39,18 @@ final class QuoteGeneratorService
      */
     public function generate(Product $product, string $location, string $periodo = 'mes'): string
     {
+        $result = $this->generateWithBreakdown($product, $location, $periodo);
+
+        return $result['cotizacion'];
+    }
+
+    /**
+     * Generate quote string and a detailed price breakdown for the UI.
+     *
+     * @return array{cotizacion: string, breakdown: list<array{concepto: string, monto: string}>}
+     */
+    public function generateWithBreakdown(Product $product, string $location, string $periodo = 'mes'): array
+    {
         $product->loadMissing(['material', 'paymentPlan', 'quoteProfile.quoteTemplate']);
 
         $tarifaEnvio = $this->computeTarifaEnvio(
@@ -55,7 +67,54 @@ final class QuoteGeneratorService
         $vars = $this->buildVariables($product, $tarifaEnvio, $periodo, $slug);
 
         $template = $profile?->quoteTemplate?->content ?? $this->fallbackTemplate($slug);
-        return $this->replacePlaceholders($template, $vars);
+        $cotizacion = $this->replacePlaceholders($template, $vars);
+
+        $breakdown = $this->buildBreakdown($vars, $periodo);
+
+        return [
+            'cotizacion' => $cotizacion,
+            'breakdown' => $breakdown,
+        ];
+    }
+
+    /**
+     * Build a list of concept/label + amount for the quote breakdown.
+     *
+     * @param array<string, string> $vars
+     * @return list<array{concepto: string, monto: string}>
+     */
+    private function buildBreakdown(array $vars, string $periodo): array
+    {
+        $periodoLabel = $periodo === 'semana' ? 'Semanal' : 'Mensual';
+        $items = [];
+
+        $items[] = ['concepto' => 'Precio del producto', 'monto' => '$' . ($vars['product.price'] ?? '0.00')];
+        $items[] = ['concepto' => 'Tarifa de envío', 'monto' => '$' . ($vars['quote.tarifa_envio'] ?? '0.00')];
+        $items[] = ['concepto' => 'Total (precio real)', 'monto' => '$' . ($vars['quote.precio_real'] ?? '0.00')];
+
+        if (! empty($vars['quote.precio_lista'] ?? '')) {
+            $items[] = ['concepto' => 'Precio de lista', 'monto' => '$' . $vars['quote.precio_lista']];
+        }
+
+        $items[] = ['concepto' => 'Período de pago', 'monto' => $periodoLabel];
+        $items[] = ['concepto' => 'Pagos totales', 'monto' => $vars['quote.pagos_totales'] ?? '—'];
+        $items[] = ['concepto' => 'Abono por período', 'monto' => '$' . ($vars['quote.abono'] ?? '0.00')];
+        $items[] = ['concepto' => 'Pago a 3 meses', 'monto' => '$' . ($vars['quote.pago3meses'] ?? '0.00')];
+
+        if (! empty($vars['quote.pagos_enganche'] ?? '')) {
+            $items[] = ['concepto' => 'Pagos de enganche', 'monto' => $vars['quote.pagos_enganche']];
+        }
+        if (! empty($vars['quote.abono_enganche'] ?? '')) {
+            $items[] = ['concepto' => 'Monto enganche por período', 'monto' => '$' . $vars['quote.abono_enganche']];
+        }
+        if (! empty($vars['quote.primer_pago'] ?? '')) {
+            $items[] = ['concepto' => 'Primer pago', 'monto' => '$' . $vars['quote.primer_pago']];
+        }
+        if (! empty($vars['quote.pagos_restantes'] ?? '')) {
+            $items[] = ['concepto' => 'Pagos restantes', 'monto' => $vars['quote.pagos_restantes']];
+        }
+
+        return $items;
     }
 
     private function computeTarifaEnvio(float $productPrice, int $tripsRequired, string $location): float

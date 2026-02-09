@@ -42,11 +42,12 @@ final class QuoteController extends Controller
         $location = trim($validated['location']);
 
         $service = QuoteGeneratorService::fromConfig();
-        $cotizacion = $service->generate($product, $location, $validated['periodo']);
+        $result = $service->generateWithBreakdown($product, $location, $validated['periodo']);
 
         return response()->json([
             'type' => 'success',
-            'cotizacion' => $cotizacion,
+            'cotizacion' => $result['cotizacion'],
+            'breakdown' => $result['breakdown'],
         ]);
     }
 }

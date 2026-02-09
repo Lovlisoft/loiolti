@@ -93,6 +93,7 @@ const locationDisplay = ref('')
 const locationCoordinates = ref('')
 const periodo = ref('mes')
 const cotizacion = ref('')
+const breakdown = ref([])
 const loading = ref(false)
 const error = ref(null)
 const locationInputRef = ref(null)
@@ -122,7 +123,7 @@ function loadGooglePlacesScript() {
 function initAutocomplete() {
   if (!locationInputRef.value || !window.google?.maps?.places) return
   autocomplete = new window.google.maps.places.Autocomplete(locationInputRef.value, {
-    types: ['address'],
+    types: ['geocode'],
     fields: ['formatted_address', 'geometry'],
   })
   autocomplete.addListener('place_changed', () => {
@@ -144,6 +145,7 @@ async function generateQuote() {
   }
   error.value = null
   cotizacion.value = ''
+  breakdown.value = []
   loading.value = true
   try {
     const { data } = await axios.post(route('quote.generate'), {
@@ -153,6 +155,7 @@ async function generateQuote() {
     })
     if (data.type === 'success') {
       cotizacion.value = data.cotizacion
+      breakdown.value = data.breakdown ?? []
     } else {
       error.value = data.message || 'No se pudo generar la cotización.'
     }
@@ -311,7 +314,26 @@ onUnmounted(() => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent class="space-y-4">
+        <div v-if="breakdown.length > 0" class="rounded-md border bg-muted/30 p-4">
+          <h4 class="text-muted-foreground mb-3 text-sm font-medium">
+            Desglose del precio
+          </h4>
+          <dl class="space-y-2">
+            <div
+              v-for="(item, index) in breakdown"
+              :key="index"
+              class="flex justify-between gap-4 text-sm"
+            >
+              <dt class="text-muted-foreground">
+                {{ item.concepto }}
+              </dt>
+              <dd class="font-medium tabular-nums">
+                {{ item.monto }}
+              </dd>
+            </div>
+          </dl>
+        </div>
         <pre class="whitespace-pre-wrap rounded-md bg-muted p-4 text-sm">{{ cotizacion }}</pre>
       </CardContent>
     </Card>
