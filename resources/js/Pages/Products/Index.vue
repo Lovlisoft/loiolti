@@ -10,6 +10,8 @@ import {
 } from '@/Components/shadcn/ui/table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/shadcn/ui/card'
 import { Badge } from '@/Components/shadcn/ui/badge'
+import { Button } from '@/Components/shadcn/ui/button'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   products: {
@@ -46,10 +48,19 @@ function planLabel(plan) {
     <div class="py-4">
       <Card>
         <CardHeader>
-          <CardTitle>Productos</CardTitle>
-          <CardDescription>
-            Listado de productos del catálogo. Total: {{ products.length }} productos.
-          </CardDescription>
+          <div class="flex items-center justify-between">
+            <div>
+              <CardTitle>Productos</CardTitle>
+              <CardDescription>
+                Listado de productos del catálogo. Total: {{ products.length }} productos.
+              </CardDescription>
+            </div>
+            <Button as-child>
+              <Link :href="route('products.create')">
+                Nuevo producto
+              </Link>
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div class="rounded-md border">
@@ -65,6 +76,9 @@ function planLabel(plan) {
                     Viajes
                   </TableHead>
                   <TableHead>Plan de pago</TableHead>
+                  <TableHead class="w-[100px]">
+                    Acciones
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,10 +103,21 @@ function planLabel(plan) {
                   <TableCell class="text-muted-foreground text-sm">
                     {{ planLabel(product.payment_plan) }}
                   </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      as-child
+                    >
+                      <Link :href="route('products.edit', product.id)">
+                        Editar
+                      </Link>
+                    </Button>
+                  </TableCell>
                 </TableRow>
                 <TableRow v-if="products.length === 0">
                   <TableCell
-                    colspan="5"
+                    colspan="6"
                     class="text-center text-muted-foreground py-8"
                   >
                     No hay productos en el catálogo.

@@ -19,9 +19,16 @@ class LoadProductsFromLegacyDatabase extends Seeder
      */
     public function run(): void
     {
-        $templates = [1, 2, 3];
-        foreach ($templates as $message) {
-            ProductMessage::create(['message' => 'demo message']);
+        $messageLabels = [
+            1 => 'Mensaje tipo 1 (cotización simple)',
+            2 => 'Mensaje tipo 2 (con plan de pagos)',
+            3 => 'Mensaje tipo 3 (con plan extendido)',
+        ];
+        foreach ($messageLabels as $id => $label) {
+            ProductMessage::updateOrCreate(
+                ['id' => $id],
+                ['id' => $id, 'message' => $label]
+            );
         }
 
         $profilesBySpeech = QuoteProfile::query()

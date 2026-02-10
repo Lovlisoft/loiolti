@@ -15,10 +15,11 @@ const route = inject('route')
 
 const navigationConfig = [
   {
-    label: 'Platform',
+    label: 'Navegación',
     items: [
-      { name: 'Dashboard', icon: 'lucide:layout-dashboard', route: 'dashboard' },
-      { name: 'Productos', icon: 'lucide:package', route: 'products' },
+      { name: 'Cotizar', icon: 'lucide:calculator', route: 'dashboard' },
+      { name: 'Productos', icon: 'lucide:package', route: 'products.index' },
+      { name: 'Plantillas de cotización', icon: 'lucide:file-text', route: 'quote-templates.index' },
     ],
   },
 ]

@@ -16,5 +16,8 @@ class QuoteVariable extends Model
         'data_type',
         'format',
         'default_value',
+        'example_value',
+        'help_text',
+        'color',
     ];
 }
