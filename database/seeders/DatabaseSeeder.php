@@ -14,8 +14,9 @@ final class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     * Order respects dependencies: user/team → settings → legacy items → quote (variables → context → templates → blocks → rules → profiles) → products.
-     * Creates initial user without Faker so seeders run in production (composer --no-dev).
+     * Order matches migration/model dependencies: user & team → settings → legacy items →
+     * quote (variables → context → templates → blocks → rules → profiles) → products.
+     * Run migrate:fresh --seed for a clean install with this structure.
      */
     public function run(): void
     {

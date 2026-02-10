@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,6 +10,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * Products table created after quote_profiles so quote_profile_id can be constrained.
      */
     public function up(): void
     {
@@ -26,6 +29,10 @@ return new class extends Migration
             $table->foreignId('payment_plan_id')
                 ->nullable()
                 ->constrained('payment_plans');
+            $table->foreignId('quote_profile_id')
+                ->nullable()
+                ->constrained('quote_profiles')
+                ->nullOnDelete();
             $table->timestamps();
         });
     }

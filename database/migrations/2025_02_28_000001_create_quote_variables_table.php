@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('data_type'); // string, number, currency, boolean
             $table->string('format')->nullable();
             $table->string('default_value')->nullable();
+            $table->string('example_value')->nullable();
+            $table->text('help_text')->nullable();
+            $table->string('color', 7)->nullable()->comment('Hex color for pill in template editor, e.g. #3b82f6');
             $table->timestamps();
         });
     }
